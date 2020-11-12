@@ -1,0 +1,56 @@
+h1, h2, h3, h4, h5 {
+    text-align: center;
+}
+
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    overflow-y: auto;
+}
+.center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+.form {
+    width: 400px;
+
+}
+.form .input {
+        width: 100%;
+}
+.form-footer {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.error-message {
+    color: red;
+    height: 20px;
+    margin-top: 20px;
+}
+.additional-actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    width: 400px;
+}
+
+.info-container {
+    font-size: 20px;
+}
+
+.info-value {
+    text-align: right;
+}
+
+.table {
+    width: 400px;
+}

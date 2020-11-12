@@ -1,0 +1,382 @@
+swagger: "2.0"
+info:
+  version: 0.1.0
+  title: VL_SA user app
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+security:
+  - key: []
+consumes:
+  - application/json
+produces:
+  - application/json
+schemes:
+  - http
+  - https
+paths:
+    /signup:
+      post:
+        tags: ["User"]
+        operationId: signup
+        parameters:
+            - in: body
+              name: body
+              description: signup for user
+              schema:
+                    $ref: "#/definitions/signupRequest"
+        responses:
+            200:
+                description: user signup successful
+                schema:
+                    $ref: "#/definitions/signupResponse"
+            400:
+                description: username or password not provided
+                schema:
+                    $ref: "#/definitions/badRequest"
+            500:
+                description: internal server error
+                schema:
+                    $ref: "#/definitions/internalError"
+    /signin:
+      post:
+        tags: ["User"]
+        operationId: signin
+        parameters:
+            - in: body
+              name: body
+              description: signin for user
+              schema:
+                    $ref: "#/definitions/signinRequest"
+        responses:
+            200:
+                description: user signin successful
+                schema:
+                    $ref: "#/definitions/signinResponse"
+            400:
+                description: username or password not provided
+                schema:
+                    $ref: "#/definitions/badRequest"
+            401:
+                description: wrong password for user
+                schema:
+                    $ref: "#/definitions/unauthorized"
+            500:
+                description: internal server error
+                schema:
+                    $ref: "#/definitions/internalError"
+    /signWithGoogle:
+      post:
+        tags: ["User"]
+        operationId: signWithGoogle
+        parameters:
+            - in: body
+              name: body
+              description: sign with google
+              schema:
+                    $ref: "#/definitions/signWithGoogleRequest"
+        responses:
+            200:
+                description: user signup successful
+                schema:
+                    $ref: "#/definitions/signupResponse"
+            400:
+                description: username or password not provided
+                schema:
+                    $ref: "#/definitions/badRequest"
+            500:
+                description: internal server error
+                schema:
+                    $ref: "#/definitions/internalError"
+    /user:
+      put:
+        tags: ["User"]
+        operationId: updateUser
+        security:
+            - Bearer: []
+        consumes:
+            - application/json
+        produces:
+            - application/json
+        parameters:
+            - in: body
+              name: body
+              description: update user
+              schema:
+                    $ref: "#/definitions/updateUserRequest"
+        responses:
+            200:
+                description: user update successful
+                schema:
+                    $ref: "#/definitions/userResponse"
+            400:
+                description: user update failed
+                schema:
+                    $ref: "#/definitions/badRequest"
+            404:
+                description: user not found
+                schema:
+                    $ref: "#/definitions/notFound"
+            500:
+                description: internal server error
+                schema:
+                    $ref: "#/definitions/internalError"
+    /forgetpass:
+      post:
+        tags: ["User"]
+        operationId: forgetpasspost
+        parameters:
+            - in: body
+              name: body
+              description: User email to generate token and send to user's email
+              required: true
+              schema:
+                  $ref: "#/definitions/passwordResetEmailRequest"
+        responses:
+            200:
+                description: OK
+                schema:
+                    $ref: "#/definitions/sucessful"
+            400:
+                description: Bad request
+                schema:
+                    $ref: "#/definitions/badRequest"
+            500:
+                description: Internal Server error
+                schema:
+                    $ref: "#/definitions/internalError"
+      get:
+        tags: ["User"]
+        operationId: forgetpassget
+        parameters:
+            - in: query
+              name: token
+              type: string
+              description: Verify forget password reset token
+        responses:
+            200:
+                description: User email and password reset token
+                schema:
+                    $ref: "#/definitions/forgetPasswordTokenVerify"
+            400:
+                description: Invalid password reset token
+                schema:
+                    $ref: "#/definitions/badRequest"
+            500:
+                description: Internal Server error
+                schema:
+                    $ref: "#/definitions/internalError"
+      put:
+        tags: ["User"]
+        operationId: forgetpassput
+        parameters:
+            - in: body
+              name: body
+              required: true
+              description: Setup a new password
+              schema:
+                  $ref: "#/definitions/passwordResetRequest"
+        responses:
+            200:
+                description: OK
+                schema:
+                    $ref: "#/definitions/sucessful"
+            400:
+                description: Missed password or invalid password reset token
+                schema:
+                    $ref: "#/definitions/badRequest"
+
+
+definitions:
+
+  #User definitions
+  signupRequest:
+    type: object
+    required:
+        - email
+        - password
+    properties:
+        email:
+            type: string
+        password:
+            type: string
+
+  signinRequest:
+    type: object
+    required:
+        - email
+        - password
+    properties:
+        email:
+            type: string
+        password:
+            type: string
+
+  signWithGoogleRequest:
+    type: object
+    required:
+        - token
+    properties:
+        token:
+            type: string
+
+  updateUserRequest:
+    type: object
+    properties:
+        email:
+            type: string
+        fullName:
+            type: string
+        address:
+            type: string
+        telephone:
+            type: string
+
+  signupResponse:
+    type: object
+    properties:
+        user:
+            $ref: "#/definitions/userResponse"
+        token:
+            type: string
+
+  signinResponse:
+    type: object
+    properties:
+        user:
+            $ref: "#/definitions/userResponse"
+        token:
+            type: string
+
+  userResponse:
+    type: object
+    properties:
+        id:
+            type: string
+        fullName:
+            type: string
+        email:
+            type: string
+        address:
+            type: string
+        telephone:
+            type: string
+        googleAuth:
+            type: boolean
+
+  passwordResetEmailRequest:
+    type: object
+    required:
+        - email
+    properties:
+        email:
+            type: string
+            minLength: 1
+            example: someemail@email.info
+
+  passwordResetRequest:
+    type: object
+    required:
+        - token
+        - password
+    properties:
+        token:
+            type: string
+            minLength: 1
+            example: XKBiaWhoaXNoYW0udGF0dG8yQGFjY2ViYXkuc2l0Zbcy2ccWh8ydkTVUy5kJfGQX08v
+        password:
+            type: string
+            minLength: 1
+            example: secretPass
+
+  forgetPasswordTokenVerify:
+    type: object
+    properties:
+        token:
+            type: string
+            example: XKBiaWhoaXNoYW0udGF0dG8yQGFjY2ViYXkuc2l0Zbcy2ccWh8ydkTVUy5kJfGQX08v
+        email:
+            type: string
+            example: hhisham.tatto2@accebay.site
+
+  badRequest:
+    description: Error Bad Request
+    type: object
+    properties:
+        code:
+            description: HTTP status code 400 - Status Bad Request
+            type: integer
+            format: int64
+            x-go-name: Code
+            example: 400
+        message:
+            description: Detailed error message
+            type: string
+            x-go-name: Message
+            example: Required argument is missed
+
+  internalError:
+    description: Error Interval Server
+    type: object
+    properties:
+        code:
+            description: HTTP status code 500 - Internal server error
+            type: integer
+            format: int64
+            x-go-name: Code
+            example: 500
+        message:
+            description: Detailed error message
+            type: string
+            x-go-name: Message
+            example: Unknown error occured
+
+  unauthorized:
+    description: Error Not Found
+    type: object
+    properties:
+        code:
+            description: HTTP status code 401 - Unauthorized
+            type: integer
+            format: int64
+            x-go-name: Code
+            example: 401
+        message:
+            description: Detailed error message
+            type: string
+            x-go-name: Message
+            example: Invalid token
+
+  notFound:
+    description: Error Not Found
+    type: object
+    properties:
+        code:
+            description: HTTP status code 404 - Not Found
+            type: integer
+            format: int64
+            x-go-name: Code
+            example: 404
+        message:
+            description: Detailed error message
+            type: string
+            x-go-name: Message
+            example: Entity not found
+
+  sucessful:
+    description: Request sucessful
+    type: object
+    properties:
+      code:
+        description: HTTP status code 200 - Sucessful
+        type: integer
+        format: int64
+        x-go-name: Code
+        example: 200
+      message:
+        description: Sucessful response message
+        type: string
+        x-go-name: Message
+        example: Operation sucessful

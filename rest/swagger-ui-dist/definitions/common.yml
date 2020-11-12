@@ -1,0 +1,79 @@
+badRequest:
+    description: Error Bad Request
+    type: object
+    properties:
+        code:
+            description: HTTP status code 400 - Status Bad Request
+            type: integer
+            format: int64
+            x-go-name: Code
+            example: 400
+        message:
+            description: Detailed error message
+            type: string
+            x-go-name: Message
+            example: Required argument is missed
+
+internalError:
+    description: Error Interval Server
+    type: object
+    properties:
+        code:
+            description: HTTP status code 500 - Internal server error
+            type: integer
+            format: int64
+            x-go-name: Code
+            example: 500
+        message:
+            description: Detailed error message
+            type: string
+            x-go-name: Message
+            example: Unknown error occured
+
+unauthorized:
+    description: Error Not Found
+    type: object
+    properties:
+        code:
+            description: HTTP status code 401 - Unauthorized
+            type: integer
+            format: int64
+            x-go-name: Code
+            example: 401
+        message:
+            description: Detailed error message
+            type: string
+            x-go-name: Message
+            example: Invalid token
+
+notFound:
+    description: Error Not Found
+    type: object
+    properties:
+        code:
+            description: HTTP status code 404 - Not Found
+            type: integer
+            format: int64
+            x-go-name: Code
+            example: 404
+        message:
+            description: Detailed error message
+            type: string
+            x-go-name: Message
+            example: Entity not found
+
+sucessful:
+    description: Request sucessful
+    type: object
+    properties:
+      code:
+        description: HTTP status code 200 - Sucessful
+        type: integer
+        format: int64
+        x-go-name: Code
+        example: 200
+      message:
+        description: Sucessful response message
+        type: string
+        x-go-name: Message
+        example: Operation sucessful

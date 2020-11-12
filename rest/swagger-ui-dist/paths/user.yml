@@ -1,0 +1,174 @@
+signup:
+    post:
+        tags: ["User"]
+        operationId: signup
+        parameters:
+            - in: body
+              name: body
+              description: signup for user
+              schema:
+                    $ref: "definitions/user.yml#/signupRequest"
+        responses:
+            200:
+                description: user signup successful
+                schema:
+                    $ref: "definitions/user.yml#/signupResponse"
+            400:
+                description: username or password not provided
+                schema:
+                    $ref: "definitions/common.yml#/badRequest"
+            500:
+                description: internal server error
+                schema:
+                    $ref: "definitions/common.yml#/internalError"
+
+signWithGoogle:
+    post:
+        tags: ["User"]
+        operationId: signWithGoogle
+        parameters:
+            - in: body
+              name: body
+              description: sign with google
+              schema:
+                    $ref: "definitions/user.yml#/signWithGoogleRequest"
+        responses:
+            200:
+                description: user signup successful
+                schema:
+                    $ref: "definitions/user.yml#/signupResponse"
+            400:
+                description: username or password not provided
+                schema:
+                    $ref: "definitions/common.yml#/badRequest"
+            500:
+                description: internal server error
+                schema:
+                    $ref: "definitions/common.yml#/internalError"
+
+signin:
+    post:
+        tags: ["User"]
+        operationId: signin
+        parameters:
+            - in: body
+              name: body
+              description: signin for user
+              schema:
+                    $ref: "definitions/user.yml#/signinRequest"
+        responses:
+            200:
+                description: user signin successful
+                schema:
+                    $ref: "definitions/user.yml#/signinResponse"
+            400:
+                description: username or password not provided
+                schema:
+                    $ref: "definitions/common.yml#/badRequest"
+            401:
+                description: wrong password for user
+                schema:
+                    $ref: "definitions/common.yml#/unauthorized"
+            500:
+                description: internal server error
+                schema:
+                    $ref: "definitions/common.yml#/internalError"
+
+user:
+    put:
+        tags: ["User"]
+        operationId: updateUser
+        security:
+            - Bearer: []
+        consumes:
+            - application/json
+        produces:
+            - application/json
+        parameters:
+            - in: body
+              name: body
+              description: update user
+              schema:
+                    $ref: "definitions/user.yml#/updateUserRequest"
+        responses:
+            200:
+                description: user update successful
+                schema:
+                    $ref: "definitions/user.yml#/userResponse"
+            400:
+                description: user update failed
+                schema:
+                    $ref: "definitions/common.yml#/badRequest"
+            404:
+                description: user not found
+                schema:
+                    $ref: "definitions/common.yml#/notFound"
+            500:
+                description: internal server error
+                schema:
+                    $ref: "definitions/common.yml#/internalError"
+
+forgetpass:
+    post:
+        tags: ["User"]
+        operationId: forgetpasspost
+        parameters:
+            - in: body
+              name: body
+              description: User email to generate token and send to user's email
+              required: true
+              schema:
+                  $ref: "definitions/user.yml#/passwordResetEmailRequest"
+        responses:
+            200:
+                description: OK
+                schema:
+                    $ref: "definitions/common.yml#/sucessful"
+            400:
+                description: Bad request
+                schema:
+                    $ref: "definitions/common.yml#/badRequest"
+            500:
+                description: Internal Server error
+                schema:
+                    $ref: "definitions/common.yml#/internalError"
+    get:
+        tags: ["User"]
+        operationId: forgetpassget
+        parameters:
+            - in: query
+              name: token
+              type: string
+              description: Verify forget password reset token
+        responses:
+            200:
+                description: User email and password reset token
+                schema:
+                    $ref: "definitions/user.yml#/forgetPasswordTokenVerify"
+            400:
+                description: Invalid password reset token
+                schema:
+                    $ref: "definitions/common.yml#/badRequest"
+            500:
+                description: Internal Server error
+                schema:
+                    $ref: "definitions/common.yml#/internalError"
+    put:
+        tags: ["User"]
+        operationId: forgetpassput
+        parameters:
+            - in: body
+              name: body
+              required: true
+              description: Setup a new password
+              schema:
+                  $ref: "definitions/user.yml#/passwordResetRequest"
+        responses:
+            200:
+                description: OK
+                schema:
+                    $ref: "definitions/common.yml#/sucessful"
+            400:
+                description: Missed password or invalid password reset token
+                schema:
+                    $ref: "definitions/common.yml#/badRequest"

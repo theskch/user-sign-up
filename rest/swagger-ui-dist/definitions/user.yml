@@ -1,0 +1,110 @@
+signupRequest:
+    type: object
+    required:
+        - email
+        - password
+    properties:
+        email:
+            type: string
+        password:
+            type: string
+
+signinRequest:
+    type: object
+    required:
+        - email
+        - password
+    properties:
+        email:
+            type: string
+        password:
+            type: string
+
+signWithGoogleRequest:
+    type: object
+    required:
+        - token
+    properties:
+        token:
+            type: string
+
+updateUserRequest:
+    type: object
+    properties:
+        email:
+            type: string
+        username:
+            type: string
+        fullName:
+            type: string
+        address:
+            type: string
+        telephone:
+            type: string
+
+signupResponse:
+    type: object
+    properties:
+        user:
+            $ref: "#/userResponse"
+        token:
+            type: string
+
+signinResponse:
+    type: object
+    properties:
+        user:
+            $ref: "#/userResponse"
+        token:
+            type: string
+
+userResponse:
+    type: object
+    properties:
+        id:
+            type: string
+        username:
+            type: string
+        fullName:
+            type: string
+        email:
+            type: string
+        address:
+            type: string
+        telephone:
+            type: string
+
+passwordResetEmailRequest:
+    type: object
+    required:
+        - email
+    properties:
+        email:
+            type: string
+            minLength: 1
+            example: someemail@email.info
+
+passwordResetRequest:
+    type: object
+    required:
+        - token
+        - password
+    properties:
+        token:
+            type: string
+            minLength: 1
+            example: XKBiaWhoaXNoYW0udGF0dG8yQGFjY2ViYXkuc2l0Zbcy2ccWh8ydkTVUy5kJfGQX08v
+        password:
+            type: string
+            minLength: 1
+            example: secretPass
+
+forgetPasswordTokenVerify:
+    type: object
+    properties:
+        token:
+            type: string
+            example: XKBiaWhoaXNoYW0udGF0dG8yQGFjY2ViYXkuc2l0Zbcy2ccWh8ydkTVUy5kJfGQX08v
+        email:
+            type: string
+            example: hhisham.tatto2@accebay.site
