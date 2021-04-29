@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
@@ -91,7 +92,8 @@ func googleLoginHandler(w http.ResponseWriter, r *http.Request) {
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	code := r.FormValue("code")
-	token, err := googleOauthConfig.Exchange(oauth2.NoContext, code)
+
+	token, err := googleOauthConfig.Exchange(context.Background(), code)
 	if err != nil {
 		fmt.Fprintf(w, "Code exchange failed with error %s\n", err.Error())
 		return
@@ -102,8 +104,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	idToken := token.Extra("id_token").(string)
 	request := new(models.SignWithGoogleRequest)
-	request.Token = &token.AccessToken
+	request.Token = &idToken
 	requestBody, err := json.Marshal(request)
 	if err != nil {
 		fmt.Fprintln(w, "Failed creating request to api")
@@ -130,7 +133,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	sessions.Values["token"] = signupResponse.Token
 	sessions.Save(r, w)
 	http.Redirect(w, r, "/home", http.StatusFound)
-	return
 }
 
 func registerCors(router *mux.Router) http.Handler {
